@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+body {
+	font-family: Open Sans;
+	text-align: center;
+}
+h1 {
+	text-align: center;
+	color: #AD6C88;
+}
+.split {
+	width: 80%;
+	margin-left: 10%;
+}
+
+input, button {
+	padding: 10px;
+}
+
+button {
+	padding: 10px 20px;
+	background: #AD6C88;
+	color: white;
+	border: none;
+	text-transform: uppercase;
+}
+
+button:hover {
+	background: #A58B96;
+	transition: 200ms ease-in-out;
+}
+button:focus, input:focus {
+	outline: none;
+}
+
+.addPerson {
+	margin-top: 10px;
+}
+
+.padding-top {
+	margin-top: 20px;
+}
+
+.calculate {
+	width: 120px;
+}
+
+.section {
+	clear: both;
+}
+
+.remove{
+	width: 14px;
+	margin-left: 5px;
+}
+
+.result {
+	text-align: center;
+}
+
+.display-none {
+	display: none;
+}
+
+.margin-left {
+	margin-left: 4px;
+}
+
+
+@media (max-width: 388px) {
+	.margin-left {
+		margin-left: 0px;
+	}
+}
