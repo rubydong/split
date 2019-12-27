@@ -1,57 +1,52 @@
 <!DOCTYPE HTML>
 <html>
-	<head>
-		<link rel="stylesheet" href="./style.css">
-	</head>
-	<body>
-		<div class="split">
-			<h1> Split Expenses </h1>
-			
-			<div class="result">
-			
-			<input type="radio" name="calc" checked onClick="toggleVisibility(this.value)" value="exact"> Exact Calculations <input type="radio" name="calc" onClick="toggleVisibility(this.value)" value="even"> Split Evenly
-			
-			<div class="people-section split-exact">
-				<h2> Calculate Exact Costs </h2>
-				<div class="people">
-					<div class="person">
-						<h3>You</h3>
-						<input class="personName"  type="text" placeholder="Name"> <input  class="personTotal" type="text" placeholder="Total ($)">
-					</div>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <div class="split">
+      <h1> Split Expenses </h1>
 
-					<div class="person"> 
-						<h3>Other</h3>
-						<input class="personName" type="text" placeholder="Name"> <input type="text" class="personTotal" placeholder="Total ($)">
-					</div>
-
-					
-				</div>
-				<button onClick="addPerson()" class="padding-top addPerson"> Add New Person </button>
-			</div>
-			
-		
-			<div class="people-section split-even display-none">
-				<h2> Split Evenly </h2>
-				<h3>Total</h3>
-				<input type="text" class="simpleTotal" placeholder="Total ($)">
-				<h3>How Many People?</h3>
-				<input type="text" class="simplePeople" placeholder="# of people">
-			</div>
-			
-				
-			<div class="padding-top section"> 
-				<h3>Tax (%)</h3>
-				<input class="tax" type="text" placeholder="i.e. 8.875"/>
-			</div>
-			
-			<div class="section"> 
-				<h3>Tip (%)</h3>
-				<input class="tip" type="text" placeholder="i.e. 15"/>
-			</div>
-			
-			<button class="padding-top calculate" onClick=calculate()> Calculate </button>
-			</div>
-		</div>
-		<script src="./split.js"></script>
-	</body>
+      How many people are you splitting with? 
+      <input id="amount-of-people-input" class="padding-top" type="number" min="1" value="2" onChange="allocateIndividualInputs()"/> 
+      <br/> 
+      
+      Do you want to split evenly?       
+      <select id="split-evenly" onChange="allocateIndividualInputs()" class="padding-top">
+        <option value="No" default>No</option>
+        <option value="Yes">Yes</option>
+      </select>
+      <p/>
+      
+      <div id="individual-totals-section"></div>
+      
+      What is the amount before tips and taxes? <br/>
+      <input id="base-amount" class="padding-top" type="text">
+      <p/>
+      
+      How much tax was charged? <br/>
+      <select id="tax-type" class="padding-top">
+        <option value="$" default>$</option>
+        <option value="%">%</option>
+      </select>
+      <input type="text" id="tax-amount"/>
+      
+      <p/>
+      
+      How much tip do you want to pay? <br/>
+      <select id="tip-type" class="padding-top">
+        <option value="%" default>%</option>
+        <option value="$">$</option>
+      </select>
+      <input type="text" id="tip-amount"/>
+      
+      
+      <p/>
+      <button id="calculate-button" onClick="calculate()">Calculate</button>
+      
+      <div id="results"></div>
+    </div>
+    <script src="./split.js"></script>
+  </body>
 </html>

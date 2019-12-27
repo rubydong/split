@@ -1,56 +1,65 @@
-let people = document.querySelector(".people");
-let even = document.querySelector(".split-even");
-let exact = document.querySelector(".split-exact");
+function allocateIndividualInputs() {
+  var splitEvenly = document.querySelector("#split-evenly").value === "Yes" ? true : false;
+  var section = document.querySelector("#individual-totals-section");
+  section.innerHTML = '';
+  if (splitEvenly) {
+    return;
+  }
 
-function addPerson() {
-	let p =  
-		"<div class='person'>" + 
-			"<h3>Other <img class='remove' src='./trash.svg' onClick='removePerson(this)'/></h3>"+ 
-			"<input class='personName' type='text' placeholder='Name' />" +	
-			"<input class='personTotal margin-left' type='text' placeholder='Total ($)' />" +	
-		"</div>";
+  var total = document.querySelector('#amount-of-people-input').value;
 
-	people.insertAdjacentHTML('beforeend', p);
+  for (var i = 1; i <= total; i++) {
+    section.innerHTML +=
+      `<input type="text" id="person-name-${i}" class="light-spacing" placeholder="Person ${i}"/>
+       <input type="text" id="person-total-${i}" class="light-spacing" placeholder="Individual Total ($)"/>
+       <p/>`;
+  }
 }
 
-function removePerson(person) {
-	people.removeChild(person.parentNode.parentNode);
+allocateIndividualInputs();
+
+function calculate() {
+  var baseAmount = parseFloat(document.querySelector("#base-amount").value);
+  var taxType = document.querySelector("#tax-type").value;
+  var taxAmount = parseFloat(document.querySelector("#tax-amount").value || 0);
+  var tipType = document.querySelector("#tip-type").value;
+  var tipAmount = parseFloat(document.querySelector("#tip-amount").value || 0);
+  var splitEvenly = document.querySelector("#split-evenly").value === "Yes" ? true : false;
+  var numOfPeople = document.querySelector("#amount-of-people-input").value;
+
+  var multiplier = getMultiplier(baseAmount, taxType, taxAmount) + getMultiplier(baseAmount, tipType, tipAmount) + 1;
+  console.log("final multiplier", multiplier);
+  var results = document.querySelector("#results");
+  var total = baseAmount;
+
+  if (splitEvenly) {
+    total = baseAmount * multiplier;
+    if (Number.isNaN(total)) {
+      results.innerHTML = "Please enter valid numbers.";
+      return;
+    } 
+
+    results.innerHTML = 
+    `The total is $${total} and the amount evenly split among ${numOfPeople} people is $${(total/numOfPeople).toFixed(2)}`;
+  } else {
+    results.innerHTML = '';
+    for (var i = 1; i <= numOfPeople; i++) {
+      var personName = document.querySelector(`#person-name-${i}`).value || `Person ${i}`;
+      var personTotal = parseFloat(document.querySelector(`#person-total-${i}`).value);
+      if (Number.isNaN(personTotal)) {
+        results.innerHTML = "Please enter valid numbers.";
+        return;
+      }
+      console.log(personName, personTotal, personTotal*multiplier);
+      personTotal = (personTotal * multiplier);
+      results.innerHTML += `${personName} will pay $${personTotal.toFixed(2)} <p/>`;
+    }
+  }
 }
 
-function calculate() {	
-	let tip = document.querySelector(".tip");
-	let tax = document.querySelector(".tax");
-	let result = document.querySelector(".result");
-
-	if (document.getElementsByName("calc")[0].checked) {
-		let names = document.querySelectorAll(".personName");
-		let total = document.querySelectorAll(".personTotal");
-
-		result.innerHTML = "";
-		tip = tip.value == "" ? 0 : tip.value * 0.01;
-		tax = tax.value == "" ? 0 : tax.value * 0.01;
-		total.forEach((t, i) => {
-			if (!isNaN(t.value) && names[i].value != "") {
-				let val = parseInt(t.value);
-				t = val + val * tip + val * tax;
-				result.innerHTML += names[i].value + " will pay $" + Math.round(t * 100)/100 + "<p/>";
-			} 
-		});
-
-	} else {
-		let number = document.querySelector(".simplePeople").value;
-		let total = document.querySelector(".simpleTotal").value;
-
-		if (total !== "" && number !== "") {
-			result.innerHTML = "Everyone will pay $" + ((total/number) * 100) / 100 + " each <p/>";
-		}
-	}
-
-	result.innerHTML += result.innerHTML === "" ? "Please provide valid inputs.<p/>" : "";
-	result.innerHTML += "<button onClick=window.location.reload()>Calculate again?</button>";
-}
-
-function toggleVisibility(value) {	
-	even.classList.toggle("display-none");
-	exact.classList.toggle("display-none");
+function getMultiplier(baseAmount, type, amount) {
+  if (type === '$') {
+    return ((baseAmount + amount) / baseAmount) - 1;
+  }
+  return amount * 0.01;
 }
