@@ -35,7 +35,7 @@ button {
 }
 
 button:hover {
-opacity: 0.9;
+  opacity: 0.8;
   transition: 200ms ease-in-out;
 }
 
@@ -58,4 +58,8 @@ button:focus, input:focus, select:focus {
 
 .display-none {
   display: none;
+}
+
+.span-background {
+  text-decoration: underline;
 }

@@ -1,15 +1,21 @@
 function allocateIndividualInputs() {
   var splitEvenly = document.querySelector("#split-evenly").value === "Yes" ? true : false;
-  var section = document.querySelector("#individual-totals-section");
-  section.innerHTML = '';
+  var individualTotalsSection = document.querySelector("#individual-totals-section");
+  individualTotalsSection.innerHTML = '';
+  
+  var baseAmountSection = document.querySelector("#base-amount-section");
   if (splitEvenly) {
+    baseAmountSection.innerHTML = 
+       `What is the amount before tips and taxes? <br/>
+        <input id="base-amount" class="padding-top" type="text">`;
     return;
-  }
+  } 
 
+  baseAmountSection.innerHTML = '';
   var total = document.querySelector('#amount-of-people-input').value;
 
   for (var i = 1; i <= total; i++) {
-    section.innerHTML +=
+    individualTotalsSection.innerHTML +=
       `<input type="text" id="person-name-${i}" class="light-spacing" placeholder="Person ${i}"/>
        <input type="text" id="person-total-${i}" class="light-spacing" placeholder="Individual Total ($)"/>
        <p/>`;
@@ -19,40 +25,64 @@ function allocateIndividualInputs() {
 allocateIndividualInputs();
 
 function calculate() {
-  var baseAmount = parseFloat(document.querySelector("#base-amount").value);
-  var taxType = document.querySelector("#tax-type").value;
   var taxAmount = parseFloat(document.querySelector("#tax-amount").value || 0);
-  var tipType = document.querySelector("#tip-type").value;
   var tipAmount = parseFloat(document.querySelector("#tip-amount").value || 0);
+  var results = document.querySelector("#results");
+
+  if (Number.isNaN(taxAmount) || Number.isNaN(tipAmount)) {
+    results.innerHTML = "Please enter valid tax or tip amounts.";
+    return;
+  }
+      
+
+  var taxType = document.querySelector("#tax-type").value;
+  var tipType = document.querySelector("#tip-type").value;
+
+  
+ 
   var splitEvenly = document.querySelector("#split-evenly").value === "Yes" ? true : false;
   var numOfPeople = document.querySelector("#amount-of-people-input").value;
 
-  var multiplier = getMultiplier(baseAmount, taxType, taxAmount) + getMultiplier(baseAmount, tipType, tipAmount) + 1;
-  console.log("final multiplier", multiplier);
-  var results = document.querySelector("#results");
-  var total = baseAmount;
 
   if (splitEvenly) {
-    total = baseAmount * multiplier;
+    var baseAmount = parseFloat(document.querySelector("#base-amount").value);
+    var multiplier = getMultiplier(baseAmount, taxType, taxAmount) + getMultiplier(baseAmount, tipType, tipAmount) + 1;
+    
+    var total = baseAmount * multiplier;
     if (Number.isNaN(total)) {
-      results.innerHTML = "Please enter valid numbers.";
+      results.innerHTML = "Please enter a valid base amount total.";
       return;
     } 
 
     results.innerHTML = 
-    `The total is $${total} and the amount evenly split among ${numOfPeople} people is $${(total/numOfPeople).toFixed(2)}`;
+    `The total is $${total} and the amount evenly split among ${numOfPeople} people is $${(total/numOfPeople).toFixed(2)}.`;
   } else {
-    results.innerHTML = '';
+    var sum = 0;
+    for (var i = 1; i <= numOfPeople; i++) {
+      sum += parseFloat(document.querySelector(`#person-total-${i}`).value);
+    }
+    
+    var taxMultiplier = getMultiplier(sum, taxType, taxAmount);
+    var tipMultiplier = getMultiplier(sum, tipType, tipAmount);
+    var multiplier = taxMultiplier + tipMultiplier + 1;
+    
+    
+    results.innerHTML = 
+    `The total amount is <span class="span-background">$${sum.toFixed(2)}</span> <p/>`;
     for (var i = 1; i <= numOfPeople; i++) {
       var personName = document.querySelector(`#person-name-${i}`).value || `Person ${i}`;
       var personTotal = parseFloat(document.querySelector(`#person-total-${i}`).value);
       if (Number.isNaN(personTotal)) {
-        results.innerHTML = "Please enter valid numbers.";
+        results.innerHTML = "Please enter valid individual totals.";
         return;
       }
-      console.log(personName, personTotal, personTotal*multiplier);
-      personTotal = (personTotal * multiplier);
-      results.innerHTML += `${personName} will pay $${personTotal.toFixed(2)} <p/>`;
+      var individualTaxAmount = (personTotal * taxMultiplier).toFixed(2);
+      var individualTipAmount = (personTotal * tipMultiplier).toFixed(2);
+      var individualTotal = (personTotal * multiplier).toFixed(2)
+      results.innerHTML += `
+      <span class="span-background">${personName}</span> will pay 
+      <span class="span-background">$${individualTotal}</span>  
+      (tax: $${individualTaxAmount} + tip: $${individualTipAmount})<p/>`;
     }
   }
 }
