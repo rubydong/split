@@ -30,7 +30,7 @@ function calculate() {
   var results = document.querySelector("#results");
 
   if (Number.isNaN(taxAmount) || Number.isNaN(tipAmount)) {
-    results.innerHTML = "Please enter valid tax or tip amounts.";
+    results.innerHTML = "<u>Please enter valid tax or tip amounts.</u>";
     return;
   }
       
@@ -50,12 +50,12 @@ function calculate() {
     
     var total = baseAmount * multiplier;
     if (Number.isNaN(total)) {
-      results.innerHTML = "Please enter a valid base amount total.";
+      results.innerHTML = "<u>Please enter a valid base amount total.</u>";
       return;
     } 
 
     results.innerHTML = 
-    `The total is $${total} and the amount evenly split among ${numOfPeople} people is $${(total/numOfPeople).toFixed(2)}.`;
+    `The total is $${total.toFixed(2)} and the amount evenly split among ${numOfPeople} people is $${(total/numOfPeople).toFixed(2)}.`;
   } else {
     var sum = 0;
     for (var i = 1; i <= numOfPeople; i++) {
@@ -68,20 +68,20 @@ function calculate() {
     
     
     results.innerHTML = 
-    `The total amount is <span class="span-background">$${sum.toFixed(2)}</span> <p/>`;
+    `The total amount is <u>$${sum.toFixed(2)}</u> <p/>`;
     for (var i = 1; i <= numOfPeople; i++) {
       var personName = document.querySelector(`#person-name-${i}`).value || `Person ${i}`;
       var personTotal = parseFloat(document.querySelector(`#person-total-${i}`).value);
       if (Number.isNaN(personTotal)) {
-        results.innerHTML = "Please enter valid individual totals.";
+        results.innerHTML = "<u>Please enter valid individual totals.</u>";
         return;
       }
       var individualTaxAmount = (personTotal * taxMultiplier).toFixed(2);
       var individualTipAmount = (personTotal * tipMultiplier).toFixed(2);
       var individualTotal = (personTotal * multiplier).toFixed(2)
       results.innerHTML += `
-      <span class="span-background">${personName}</span> will pay 
-      <span class="span-background">$${individualTotal}</span>  
+      <u>${personName}</u> will pay 
+      <u>$${individualTotal}</u>  
       (tax: $${individualTaxAmount} + tip: $${individualTipAmount})<p/>`;
     }
   }

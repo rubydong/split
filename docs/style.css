@@ -60,6 +60,6 @@ button:focus, input:focus, select:focus {
   display: none;
 }
 
-.span-background {
+.underline {
   text-decoration: underline;
 }
