@@ -1,14 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
 
 body,
-input {
+input,
+select {
   font-family: Montserrat;
   text-align: center;
+  color: #485460;
 }
 
-h1 {
-  text-align: center;
-  color: #5192ca;
+h3 {
+  margin-bottom: 4px;
+  color: #738794;
 }
 
 i {
@@ -17,7 +19,7 @@ i {
 
 b,
 u {
-  color: #5192ca;
+  color: #d2bca8;
 }
 
 input,
@@ -25,7 +27,7 @@ button,
 select {
   padding: 5px;
   border-radius: 3px;
-  border: 1px solid #b1b1b1;
+  border: 1px solid #c4d4e0;
   background: none;
 }
 
@@ -35,7 +37,7 @@ select {
 
 button {
   padding: 10px 20px;
-  background: #5192ca;
+  background: #5f7081;
   color: white;
   border: none;
   text-transform: uppercase;
@@ -44,6 +46,11 @@ button {
 button:hover {
   opacity: 0.8;
   transition: 200ms ease-in-out;
+  cursor: pointer;
+}
+
+.tipPreferencesButton {
+  background: #d2bca8;
 }
 
 button:focus,
@@ -74,5 +81,5 @@ select:focus {
 }
 
 .grayText {
-  color: #7e7e7e;
+  color: #7e8e8e;
 }

@@ -28,7 +28,13 @@ allocateIndividualInputs();
 function calculate() {
   var taxAmount = parseFloat(document.querySelector('#tax-amount').value || 0);
   var tipAmount = parseFloat(document.querySelector('#tip-amount').value || 0);
+  // var isTipBasedOnPretax =
+  //   document.querySelector('input[name="tipTaxPreference"]:checked').value ===
+  //   'preTax';
+  // console.log('isTipBasedOnPretax', isTipBasedOnPretax);
   var results = document.querySelector('#results');
+  // clear existing calculations for results
+  results.innerHTML = '';
 
   if (Number.isNaN(taxAmount) || Number.isNaN(tipAmount)) {
     results.innerHTML = '<u>Please enter valid tax or tip amounts.</u>';
@@ -90,7 +96,6 @@ function calculate() {
       var individualTipAmount = (personTotal * tipMultiplier).toFixed(2);
       var individualTotal = (personTotal * multiplier).toFixed(2);
 
-      console.log('individualTotal', individualTotal);
       overallTotal += parseFloat(individualTotal);
       overallTipAmt += parseFloat(individualTipAmount);
       overallTaxAmt += parseFloat(individualTaxAmount);
@@ -111,8 +116,24 @@ function calculate() {
 }
 
 function getMultiplier(baseAmount, type, amount) {
+  // this determines what the multipler is for the tax and tip
   if (type === '$') {
     return (baseAmount + amount) / baseAmount - 1;
   }
   return amount * 0.01;
+}
+
+function changeTipAmount(tipAmount) {
+  document.querySelector('#tip-amount').value = tipAmount;
+}
+
+function toggleTipsPercentagesSection() {
+  // do not show this section if user selects $ for the tips preference
+  if (
+    document.querySelector('.tipsBasedOnPercentages').style.display === 'none'
+  ) {
+    document.querySelector('.tipsBasedOnPercentages').style.display = 'block';
+  } else {
+    document.querySelector('.tipsBasedOnPercentages').style.display = 'none';
+  }
 }

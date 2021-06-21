@@ -1,49 +1,106 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="./style.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <div class="split">
-      <h1> Split Expenses </h1>
+      <h1>Split Expenses</h1>
 
-      How many people are you splitting with? 
-      <input id="amount-of-people-input" class="padding-top" type="number" min="1" value="2" onChange="allocateIndividualInputs()"/> 
-      <br/> 
-      
-      Do you want to split evenly?       
-      <select id="split-evenly" onChange="allocateIndividualInputs()" class="padding-top">
-        <option value="No" default>No</option>
-        <option value="Yes">Yes</option>
+      <!-- # of people -->
+      <span>How many people are you splitting with?</span>
+      <input
+        id="amount-of-people-input"
+        class="padding-top"
+        type="number"
+        min="1"
+        value="2"
+        onChange="allocateIndividualInputs()"
+      />
+      <br />
+
+      <!-- Splitting evenly? -->
+      <span>Do you want to split evenly?</span>
+      <select
+        id="split-evenly"
+        onChange="allocateIndividualInputs()"
+        class="padding-top"
+      >
+        <option class="grayText" value="No" default>No</option>
+        <option class="grayText" value="Yes">Yes</option>
       </select>
-      <p/>
-      
+      <p />
+
       <div id="individual-totals-section"></div>
-      
+
       <div id="base-amount-section"></div>
 
-      <p/>
-      
-      How much tax was charged? <br/>
+      <p />
+
+      <!-- Taxes -->
+      <h3>How much tax was charged?</h3>
       <select id="tax-type" class="padding-top">
         <option value="$" default>$</option>
         <option value="%">%</option>
       </select>
-      <input type="text" id="tax-amount"/>
-      
-      <p/>
-      
-      How much tip do you want to pay? <br/>
-      <select id="tip-type" class="padding-top">
-        <option value="%" default>%</option>
-        <option value="$">$</option>
+      <input type="text" id="tax-amount" placeholder="Tax amount ($ / %)" />
+
+      <p />
+
+      <!-- Tips -->
+      <h3>Tip preferences</h3>
+
+      <select onchange="toggleTipsPercentagesSection()" id="tip-type" class="padding-top">
+        <option value="%" default>
+          %
+        </option>
+        <option value="$"">
+          $
+        </option>
       </select>
-      <input type="text" id="tip-amount"/>
-      
+      <input type="text" id="tip-amount" placeholder="Tip amount ($ / %)" />
+
+      <div class="tipsBasedOnPercentages">
+       
+        <p />
+        <button class="tipPreferencesButton" onClick="changeTipAmount(15)">
+          15%
+        </button>
+        <button class="tipPreferencesButton" onClick="changeTipAmount(18)">
+          18%
+        </button>
+        <button class="tipPreferencesButton" onClick="changeTipAmount(20)">
+          20%
+        </button>
+        <button class="tipPreferencesButton" onClick="changeTipAmount(22)">
+          22%
+        </button>
+        <button class="tipPreferencesButton" onClick="changeTipAmount(25)">
+          25%
+        </button>
+
+        <p />
+        <!-- these radios should only be available for percentages -->
+
+        <!-- <input
+          type="radio"
+          id="preTax"
+          name="tipTaxPreference"
+          value="preTax"
+          checked
+        />Tip on pre-tax amount
+
+        <input
+          type="radio"
+          id="postTax"
+          name="tipTaxPreference"
+          value="postTax"
+        />Tip on post-tax amount -->
+      </div>
+      <p />
       <div id="results"></div>
-      
-      <p/>
+      <p />
       <button id="calculate-button" onClick="calculate()">Calculate</button>
     </div>
     <script src="./split.js"></script>
