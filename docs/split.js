@@ -28,10 +28,10 @@ allocateIndividualInputs();
 function calculate() {
   var taxAmount = parseFloat(document.querySelector('#tax-amount').value || 0);
   var tipAmount = parseFloat(document.querySelector('#tip-amount').value || 0);
-  // var isTipBasedOnPretax =
-  //   document.querySelector('input[name="tipTaxPreference"]:checked').value ===
-  //   'preTax';
-  // console.log('isTipBasedOnPretax', isTipBasedOnPretax);
+  var isTipBasedOnPretax =
+    document.querySelector('input[name="tipTaxPreference"]:checked').value ===
+      'preTax' || isTipsPercentageSectionHidden();
+
   var results = document.querySelector('#results');
   // clear existing calculations for results
   results.innerHTML = '';
@@ -51,12 +51,15 @@ function calculate() {
   if (splitEvenly) {
     // splitting the bill evenly
     var baseAmount = parseFloat(document.querySelector('#base-amount').value);
-    var multiplier =
-      getMultiplier(baseAmount, taxType, taxAmount) +
-      getMultiplier(baseAmount, tipType, tipAmount) +
-      1;
+    var taxMultiplier = getMultiplier(baseAmount, taxType, taxAmount);
+    var tipMultiplier = getMultiplier(baseAmount, tipType, tipAmount);
 
-    var total = baseAmount * multiplier;
+    var total = 0;
+    var multiplier = isTipBasedOnPretax
+      ? taxMultiplier + tipMultiplier + 1
+      : (taxMultiplier + 1) * (tipMultiplier + 1);
+
+    total = baseAmount * multiplier;
     if (Number.isNaN(total)) {
       results.innerHTML = '<u>Please enter a valid base amount total.</u>';
       return;
@@ -76,7 +79,10 @@ function calculate() {
 
     var taxMultiplier = getMultiplier(sum, taxType, taxAmount);
     var tipMultiplier = getMultiplier(sum, tipType, tipAmount);
-    var multiplier = taxMultiplier + tipMultiplier + 1;
+
+    var multiplier = isTipBasedOnPretax
+      ? taxMultiplier + tipMultiplier + 1
+      : (taxMultiplier + 1) * (tipMultiplier + 1);
 
     let overallTotal = 0;
     let overallTipAmt = 0;
@@ -92,9 +98,14 @@ function calculate() {
         results.innerHTML = '<u>Please enter valid individual totals.</u>';
         return;
       }
+
       var individualTaxAmount = (personTotal * taxMultiplier).toFixed(2);
-      var individualTipAmount = (personTotal * tipMultiplier).toFixed(2);
       var individualTotal = (personTotal * multiplier).toFixed(2);
+      var individualTipAmount = (
+        individualTotal -
+        individualTaxAmount -
+        personTotal
+      ).toFixed(2);
 
       overallTotal += parseFloat(individualTotal);
       overallTipAmt += parseFloat(individualTipAmount);
@@ -129,11 +140,15 @@ function changeTipAmount(tipAmount) {
 
 function toggleTipsPercentagesSection() {
   // do not show this section if user selects $ for the tips preference
-  if (
-    document.querySelector('.tipsBasedOnPercentages').style.display === 'none'
-  ) {
+  if (isTipsPercentageSectionHidden()) {
     document.querySelector('.tipsBasedOnPercentages').style.display = 'block';
   } else {
     document.querySelector('.tipsBasedOnPercentages').style.display = 'none';
   }
+}
+
+function isTipsPercentageSectionHidden() {
+  return (
+    document.querySelector('.tipsBasedOnPercentages').style.display === 'none'
+  );
 }
