@@ -1,24 +1,31 @@
-
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
 
-body, input {
+body,
+input {
   font-family: Montserrat;
   text-align: center;
 }
 
 h1 {
   text-align: center;
-  color: #5192CA;
+  color: #5192ca;
 }
 
 i {
   font-size: 0.875rem;
 }
 
-input, button, select {
+b,
+u {
+  color: #5192ca;
+}
+
+input,
+button,
+select {
   padding: 5px;
   border-radius: 3px;
-  border: 1px solid #B1B1B1;
+  border: 1px solid #b1b1b1;
   background: none;
 }
 
@@ -28,7 +35,7 @@ select {
 
 button {
   padding: 10px 20px;
-  background: #5192CA;
+  background: #5192ca;
   color: white;
   border: none;
   text-transform: uppercase;
@@ -39,7 +46,9 @@ button:hover {
   transition: 200ms ease-in-out;
 }
 
-button:focus, input:focus, select:focus {
+button:focus,
+input:focus,
+select:focus {
   outline: none;
 }
 
@@ -62,4 +71,8 @@ button:focus, input:focus, select:focus {
 
 .underline {
   text-decoration: underline;
+}
+
+.grayText {
+  color: #7e7e7e;
 }
