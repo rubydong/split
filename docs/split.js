@@ -1,3 +1,5 @@
+const individualTotalPlaceholder = 'Individual Total ($)';
+
 function allocateIndividualInputs() {
   const splitEvenly =
     document.querySelector('#split-evenly').value === 'Yes' ? true : false;
@@ -20,10 +22,12 @@ function allocateIndividualInputs() {
 
   for (let i = 1; i <= total; i++) {
     individualTotalsSection.innerHTML += `
-      <div class="individualTotalRow">
+      <div class="fieldInputRow" id="individualTotalRow-${i}">
         <input type="text" id="person-name-${i}" class="light-spacing" placeholder="Person ${i}"/>
-        <input type="text" id="person-total-${i}" class="light-spacing" placeholder="Individual Total ($)" oninput="this.value=validateNumber(this.value)"/>
+        <input type="text" id="person-total-${i}" class="light-spacing" placeholder="${individualTotalPlaceholder}" oninput="this.value=validateNumber(this.value)"/>
+        <button class="additionalExpenseButton" onclick="addAdditionalExpense(${i})">+</button>  
       </div>
+      <div class="additionalExpensesSection" id="additionalExpensesSection-${i}"></div>
       <p/>
     `;
   }
@@ -75,11 +79,11 @@ function calculate() {
       return;
     }
 
-    results.innerHTML = `The total is <u>$${total.toFixed(
-      2
-    )}</u> and the amount evenly split among ${numOfPeople} people is <u>$${(
-      total / numOfPeople
-    ).toFixed(2)}</u>.`;
+    results.innerHTML = `
+      The total is <u>$${total.toFixed(2)}</u> 
+      and the amount evenly split among ${numOfPeople} people is 
+      <u>$${(total / numOfPeople).toFixed(2)}</u>.
+    `;
   } else {
     // splitting the bill by individual totals
     let sum = 0;
@@ -122,9 +126,11 @@ function calculate() {
       overallTaxAmt += parseFloat(individualTaxAmount);
 
       results.innerHTML += `
-      <b>${personName}</b> will pay 
-      <u>$${individualTotal}</u>  
-      <span class="grayText">(tax: $${individualTaxAmount} + tip: $${individualTipAmount})</span><p/>`;
+        <b>${personName}</b> will pay 
+        <u>$${individualTotal}</u>  
+        <span class="grayText">(tax: $${individualTaxAmount} + tip: $${individualTipAmount})</span>
+        <p/>
+      `;
     }
 
     results.innerHTML += `
@@ -150,6 +156,33 @@ function getMultiplier(baseAmount, type, amount) {
 function validateNumber(value) {
   // only allows numbers and one decimal at most
   return value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+}
+
+// dealing with additional expenses
+function generateRandomString() {
+  return Math.random().toString(36).substring(2, 7);
+}
+
+function addAdditionalExpense(person) {
+  const randomString = generateRandomString();
+  document.querySelector(`#additionalExpensesSection-${person}`).innerHTML += `
+      <p/>
+      <div class="fieldInputRow">  
+        <input type="text" id="${randomString}" placeholder="${individualTotalPlaceholder}"/>
+        <button 
+          class="additionalExpenseButton" 
+          onclick="removeAdditionalExpense(${randomString}, '#additionalExpensesSection-${person}')"
+        >
+          -
+        </button>
+      </div>
+    `;
+}
+
+function removeAdditionalExpense(randomString, parentQuery) {
+  console.log('randomString', randomString);
+  // console.log(document.querySelector(`#${randomString}`));
+  console.log(document.querySelector('#individual-totals-section'));
 }
 
 // Tips
