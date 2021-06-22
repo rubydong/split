@@ -5,7 +5,7 @@ input,
 select {
   font-family: Montserrat;
   text-align: center;
-  color: #485460;
+  color: #46576b;
 }
 
 h3 {
@@ -19,7 +19,7 @@ i {
 
 b,
 u {
-  color: #d2bca8;
+  color: #748f99;
 }
 
 input,
@@ -37,7 +37,7 @@ select {
 
 button {
   padding: 10px 20px;
-  background: #5f7081;
+  background: #46576b;
   color: white;
   border: none;
   text-transform: uppercase;
@@ -50,7 +50,9 @@ button:hover {
 }
 
 .tipPreferencesButton {
-  background: #d2bca8;
+  background: #a5c0cc;
+  padding: 10px;
+  border-radius: 20px;
 }
 
 button:focus,

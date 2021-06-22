@@ -34,7 +34,7 @@ function calculate() {
 
   var results = document.querySelector('#results');
   // clear existing calculations for results
-  results.innerHTML = '';
+  results.innerHTML = '<h3>Calculations</h3> <p/>';
 
   if (Number.isNaN(taxAmount) || Number.isNaN(tipAmount)) {
     results.innerHTML = '<u>Please enter valid tax or tip amounts.</u>';
@@ -118,10 +118,12 @@ function calculate() {
     }
 
     results.innerHTML += `
-      The total is <u>$${overallTotal.toFixed(2)}</u> <br/>
-      The subtotal amount is $${sum.toFixed(2)} <br/>
-      Taxes paid: $${overallTaxAmt.toFixed(2)} <br/>
-      Tips paid: $${overallTipAmt.toFixed(2)}
+      Total: <u>$${overallTotal.toFixed(2)}</u> 
+      <span class="grayText">
+        (Subtotal: $${sum.toFixed(2)} + 
+        Taxes: $${overallTaxAmt.toFixed(2)} +
+        Tips: $${overallTipAmt.toFixed(2)})
+      </span>
     `;
   }
 }
@@ -134,6 +136,7 @@ function getMultiplier(baseAmount, type, amount) {
   return amount * 0.01;
 }
 
+// Tips
 function changeTipAmount(tipAmount) {
   document.querySelector('#tip-amount').value = tipAmount;
 }
@@ -151,4 +154,14 @@ function isTipsPercentageSectionHidden() {
   return (
     document.querySelector('.tipsBasedOnPercentages').style.display === 'none'
   );
+}
+
+// Taxes
+function defaultTaxPercentage() {
+  const nycTax = 8.875;
+  if (document.querySelector('#tax-type').value === '%') {
+    document.querySelector('#tax-amount').value = nycTax;
+  } else {
+    document.querySelector('#tax-amount').value = null;
+  }
 }

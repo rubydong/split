@@ -40,11 +40,11 @@
 
       <!-- Taxes -->
       <h3>How much tax was charged?</h3>
-      <select id="tax-type" class="padding-top">
+      <select id="tax-type" onChange="defaultTaxPercentage()" class="padding-top">
         <option value="$" default>$</option>
         <option value="%">%</option>
       </select>
-      <input type="text" id="tax-amount" placeholder="Tax amount ($ / %)" />
+      <input type="text" id="tax-amount" placeholder="Tax amount ($ / %)" onchange="validateNumber()" />
 
       <p />
 
@@ -59,10 +59,10 @@
           $
         </option>
       </select>
-      <input type="text" id="tip-amount" placeholder="Tip amount ($ / %)" />
+      <input type="text" id="tip-amount" placeholder="Tip amount ($ / %)" onchange="validateNumber()"/>
 
+      <!-- This section should only be available for percentages -->
       <div class="tipsBasedOnPercentages">
-       
         <p />
         <button class="tipPreferencesButton" onClick="changeTipAmount(15)">
           15%
@@ -81,8 +81,6 @@
         </button>
 
         <p />
-        <!-- these radios should only be available for percentages -->
-
         <input
           type="radio"
           id="preTax"
