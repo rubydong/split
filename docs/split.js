@@ -1,41 +1,48 @@
 function allocateIndividualInputs() {
-  var splitEvenly =
+  const splitEvenly =
     document.querySelector('#split-evenly').value === 'Yes' ? true : false;
-  var individualTotalsSection = document.querySelector(
+  let individualTotalsSection = document.querySelector(
     '#individual-totals-section'
   );
   individualTotalsSection.innerHTML = '';
 
-  var baseAmountSection = document.querySelector('#base-amount-section');
+  let baseAmountSection = document.querySelector('#base-amount-section');
   if (splitEvenly) {
-    baseAmountSection.innerHTML = `What is the amount before tips and taxes? <br/>
-        <input id="base-amount" class="padding-top" type="text" oninput="this.value=validateNumber(this.value)">`;
+    baseAmountSection.innerHTML = `
+      What is the amount before tips and taxes? <br/>
+      <input id="base-amount" class="padding-top" type="text" oninput="this.value=validateNumber(this.value)">
+    `;
     return;
   }
 
   baseAmountSection.innerHTML = '';
-  var total = document.querySelector('#amount-of-people-input').value;
+  const total = document.querySelector('#amount-of-people-input').value;
 
-  for (var i = 1; i <= total; i++) {
+  for (let i = 1; i <= total; i++) {
     individualTotalsSection.innerHTML += `
       <div class="individualTotalRow">
         <input type="text" id="person-name-${i}" class="light-spacing" placeholder="Person ${i}"/>
         <input type="text" id="person-total-${i}" class="light-spacing" placeholder="Individual Total ($)" oninput="this.value=validateNumber(this.value)"/>
       </div>
-      <p/>`;
+      <p/>
+    `;
   }
 }
 
 allocateIndividualInputs();
 
 function calculate() {
-  var taxAmount = parseFloat(document.querySelector('#tax-amount').value || 0);
-  var tipAmount = parseFloat(document.querySelector('#tip-amount').value || 0);
-  var isTipBasedOnPretax =
+  const taxAmount = parseFloat(
+    document.querySelector('#tax-amount').value || 0
+  );
+  const tipAmount = parseFloat(
+    document.querySelector('#tip-amount').value || 0
+  );
+  const isTipBasedOnPretax =
     document.querySelector('input[name="tipTaxPreference"]:checked').value ===
       'preTax' || isTipsPercentageSectionHidden();
 
-  var results = document.querySelector('#results');
+  let results = document.querySelector('#results');
   // clear existing calculations for results
   results.innerHTML = '<h3>Calculations</h3> <p/>';
 
@@ -44,21 +51,21 @@ function calculate() {
     return;
   }
 
-  var taxType = document.querySelector('#tax-type').value;
-  var tipType = document.querySelector('#tip-type').value;
+  const taxType = document.querySelector('#tax-type').value;
+  const tipType = document.querySelector('#tip-type').value;
 
-  var splitEvenly =
+  const splitEvenly =
     document.querySelector('#split-evenly').value === 'Yes' ? true : false;
-  var numOfPeople = document.querySelector('#amount-of-people-input').value;
+  const numOfPeople = document.querySelector('#amount-of-people-input').value;
 
   if (splitEvenly) {
     // splitting the bill evenly
-    var baseAmount = parseFloat(document.querySelector('#base-amount').value);
-    var taxMultiplier = getMultiplier(baseAmount, taxType, taxAmount);
-    var tipMultiplier = getMultiplier(baseAmount, tipType, tipAmount);
+    const baseAmount = parseFloat(document.querySelector('#base-amount').value);
+    const taxMultiplier = getMultiplier(baseAmount, taxType, taxAmount);
+    const tipMultiplier = getMultiplier(baseAmount, tipType, tipAmount);
 
-    var total = 0;
-    var multiplier = isTipBasedOnPretax
+    let total = 0;
+    let multiplier = isTipBasedOnPretax
       ? taxMultiplier + tipMultiplier + 1
       : (taxMultiplier + 1) * (tipMultiplier + 1);
 
@@ -75,15 +82,15 @@ function calculate() {
     ).toFixed(2)}</u>.`;
   } else {
     // splitting the bill by individual totals
-    var sum = 0;
-    for (var i = 1; i <= numOfPeople; i++) {
+    let sum = 0;
+    for (let i = 1; i <= numOfPeople; i++) {
       sum += parseFloat(document.querySelector(`#person-total-${i}`).value);
     }
 
-    var taxMultiplier = getMultiplier(sum, taxType, taxAmount);
-    var tipMultiplier = getMultiplier(sum, tipType, tipAmount);
+    const taxMultiplier = getMultiplier(sum, taxType, taxAmount);
+    const tipMultiplier = getMultiplier(sum, tipType, tipAmount);
 
-    var multiplier = isTipBasedOnPretax
+    const multiplier = isTipBasedOnPretax
       ? taxMultiplier + tipMultiplier + 1
       : (taxMultiplier + 1) * (tipMultiplier + 1);
 
@@ -91,10 +98,10 @@ function calculate() {
     let overallTipAmt = 0;
     let overallTaxAmt = 0;
 
-    for (var i = 1; i <= numOfPeople; i++) {
-      var personName =
+    for (let i = 1; i <= numOfPeople; i++) {
+      let personName =
         document.querySelector(`#person-name-${i}`).value || `Person ${i}`;
-      var personTotal = parseFloat(
+      let personTotal = parseFloat(
         document.querySelector(`#person-total-${i}`).value
       );
       if (Number.isNaN(personTotal)) {
@@ -102,9 +109,9 @@ function calculate() {
         return;
       }
 
-      var individualTaxAmount = (personTotal * taxMultiplier).toFixed(2);
-      var individualTotal = (personTotal * multiplier).toFixed(2);
-      var individualTipAmount = (
+      let individualTaxAmount = (personTotal * taxMultiplier).toFixed(2);
+      let individualTotal = (personTotal * multiplier).toFixed(2);
+      let individualTipAmount = (
         individualTotal -
         individualTaxAmount -
         personTotal
