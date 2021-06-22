@@ -44,7 +44,7 @@
         <option value="$" default>$</option>
         <option value="%">%</option>
       </select>
-      <input type="text" id="tax-amount" placeholder="Tax amount ($ / %)" onchange="validateNumber()" />
+      <input type="text" id="tax-amount" placeholder="Tax amount ($ / %)" oninput="this.value=validateNumber(this.value)" />
 
       <p />
 
@@ -59,7 +59,7 @@
           $
         </option>
       </select>
-      <input type="text" id="tip-amount" placeholder="Tip amount ($ / %)" onchange="validateNumber()"/>
+      <input type="text" id="tip-amount" placeholder="Tip amount ($ / %)" oninput="this.value=validateNumber(this.value)"/>
 
       <!-- This section should only be available for percentages -->
       <div class="tipsBasedOnPercentages">

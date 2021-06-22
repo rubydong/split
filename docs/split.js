@@ -9,7 +9,7 @@ function allocateIndividualInputs() {
   var baseAmountSection = document.querySelector('#base-amount-section');
   if (splitEvenly) {
     baseAmountSection.innerHTML = `What is the amount before tips and taxes? <br/>
-        <input id="base-amount" class="padding-top" type="text">`;
+        <input id="base-amount" class="padding-top" type="text" oninput="this.value=validateNumber(this.value)">`;
     return;
   }
 
@@ -17,9 +17,12 @@ function allocateIndividualInputs() {
   var total = document.querySelector('#amount-of-people-input').value;
 
   for (var i = 1; i <= total; i++) {
-    individualTotalsSection.innerHTML += `<input type="text" id="person-name-${i}" class="light-spacing" placeholder="Person ${i}"/>
-       <input type="text" id="person-total-${i}" class="light-spacing" placeholder="Individual Total ($)"/>
-       <p/>`;
+    individualTotalsSection.innerHTML += `
+      <div class="individualTotalRow">
+        <input type="text" id="person-name-${i}" class="light-spacing" placeholder="Person ${i}"/>
+        <input type="text" id="person-total-${i}" class="light-spacing" placeholder="Individual Total ($)" oninput="this.value=validateNumber(this.value)"/>
+      </div>
+      <p/>`;
   }
 }
 
@@ -128,12 +131,18 @@ function calculate() {
   }
 }
 
+// Generic number helpers
 function getMultiplier(baseAmount, type, amount) {
   // this determines what the multipler is for the tax and tip
   if (type === '$') {
     return (baseAmount + amount) / baseAmount - 1;
   }
   return amount * 0.01;
+}
+
+function validateNumber(value) {
+  // only allows numbers and one decimal at most
+  return value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
 }
 
 // Tips

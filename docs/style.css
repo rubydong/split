@@ -35,6 +35,13 @@ select {
   height: 26px;
 }
 
+.individualTotalRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* buttons */
 button {
   padding: 10px 20px;
   background: #46576b;
@@ -49,10 +56,21 @@ button:hover {
   cursor: pointer;
 }
 
-.tipPreferencesButton {
+.tipPreferencesButton,
+.additionalExpenseButton {
   background: #a5c0cc;
   padding: 10px;
   border-radius: 20px;
+}
+
+.additionalExpenseButton {
+  margin-left: 4px;
+  height: 18px;
+  width: 20px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  /* line-height: 20px; */
 }
 
 button:focus,
@@ -72,14 +90,6 @@ select:focus {
 #calculate-button {
   margin-top: 10px;
   width: 180px;
-}
-
-.display-none {
-  display: none;
-}
-
-.underline {
-  text-decoration: underline;
 }
 
 .grayText {
