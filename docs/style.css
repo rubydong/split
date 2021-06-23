@@ -61,20 +61,25 @@ button:hover {
 }
 
 .tipPreferencesButton,
-.additionalExpenseButton {
+.additionalExpenseButton,
+.removeExpenseButton {
   background: #a5c0cc;
   padding: 10px;
   border-radius: 20px;
 }
 
-.additionalExpenseButton {
+.additionalExpenseButton,
+.removeExpenseButton {
   margin-left: 4px;
   height: 10px;
   width: 10px;
-  color: white;
   justify-content: center;
   align-items: center;
   display: flex;
+}
+
+.removeExpenseButton {
+  background-color: #d1626c;
 }
 
 button:focus,
