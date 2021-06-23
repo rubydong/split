@@ -32,13 +32,17 @@ select {
 }
 
 select {
-  height: 26px;
+  height: 28px;
 }
 
-.individualTotalRow {
+.fieldInputRow {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.additionalExpensesSection {
+  margin-left: 164px;
 }
 
 /* buttons */
@@ -57,20 +61,25 @@ button:hover {
 }
 
 .tipPreferencesButton,
-.additionalExpenseButton {
+.additionalExpenseButton,
+.removeExpenseButton {
   background: #a5c0cc;
   padding: 10px;
   border-radius: 20px;
 }
 
-.additionalExpenseButton {
+.additionalExpenseButton,
+.removeExpenseButton {
   margin-left: 4px;
-  height: 18px;
-  width: 20px;
+  height: 10px;
+  width: 10px;
   justify-content: center;
   align-items: center;
   display: flex;
-  /* line-height: 20px; */
+}
+
+.removeExpenseButton {
+  background-color: #d1626c;
 }
 
 button:focus,

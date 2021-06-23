@@ -1,3 +1,6 @@
+const individualTotalPlaceholder = 'Individual Total ($)';
+const onInputCall = 'this.value=validateNumber(this.value)';
+
 function allocateIndividualInputs() {
   const splitEvenly =
     document.querySelector('#split-evenly').value === 'Yes' ? true : false;
@@ -10,7 +13,7 @@ function allocateIndividualInputs() {
   if (splitEvenly) {
     baseAmountSection.innerHTML = `
       What is the amount before tips and taxes? <br/>
-      <input id="base-amount" class="padding-top" type="text" oninput="this.value=validateNumber(this.value)">
+      <input id="base-amount" class="padding-top" type="text" oninput="${onInputCall}">
     `;
     return;
   }
@@ -20,10 +23,12 @@ function allocateIndividualInputs() {
 
   for (let i = 1; i <= total; i++) {
     individualTotalsSection.innerHTML += `
-      <div class="individualTotalRow">
+      <div class="fieldInputRow" id="individualTotalRow-${i}">
         <input type="text" id="person-name-${i}" class="light-spacing" placeholder="Person ${i}"/>
-        <input type="text" id="person-total-${i}" class="light-spacing" placeholder="Individual Total ($)" oninput="this.value=validateNumber(this.value)"/>
+        <input type="text" class="person-${i}-expense" id="person-total-${i}" class="light-spacing" placeholder="${individualTotalPlaceholder}" oninput="${onInputCall}"/>
+        <button class="additionalExpenseButton" onclick="addAdditionalExpense(${i})">+</button>  
       </div>
+      <div class="additionalExpensesSection" id="additionalExpensesSection-${i}"></div>
       <p/>
     `;
   }
@@ -47,7 +52,7 @@ function calculate() {
   results.innerHTML = '<h3>Calculations</h3> <p/>';
 
   if (Number.isNaN(taxAmount) || Number.isNaN(tipAmount)) {
-    results.innerHTML = '<u>Please enter valid tax or tip amounts.</u>';
+    results.innerHTML += '<u>Please enter valid tax or tip amounts.</u>';
     return;
   }
 
@@ -71,20 +76,29 @@ function calculate() {
 
     total = baseAmount * multiplier;
     if (Number.isNaN(total)) {
-      results.innerHTML = '<u>Please enter a valid base amount total.</u>';
+      results.innerHTML += '<u>Please enter a valid base amount total.</u>';
       return;
     }
 
-    results.innerHTML = `The total is <u>$${total.toFixed(
-      2
-    )}</u> and the amount evenly split among ${numOfPeople} people is <u>$${(
-      total / numOfPeople
-    ).toFixed(2)}</u>.`;
+    results.innerHTML += `
+      The total is <u>$${total.toFixed(2)}</u> 
+      and the amount evenly split among ${numOfPeople} people is 
+      <u>$${(total / numOfPeople).toFixed(2)}</u>.
+    `;
   } else {
     // splitting the bill by individual totals
     let sum = 0;
+    const individualTotalMap = {};
     for (let i = 1; i <= numOfPeople; i++) {
-      sum += parseFloat(document.querySelector(`#person-total-${i}`).value);
+      let individualSum = 0;
+      let individualExpenses = document.querySelectorAll(
+        `.person-${i}-expense`
+      );
+      individualExpenses.forEach((expense) => {
+        individualSum += parseFloat(expense.value) || 0;
+      });
+      individualTotalMap[i] = individualSum;
+      sum += individualSum;
     }
 
     const taxMultiplier = getMultiplier(sum, taxType, taxAmount);
@@ -101,9 +115,7 @@ function calculate() {
     for (let i = 1; i <= numOfPeople; i++) {
       let personName =
         document.querySelector(`#person-name-${i}`).value || `Person ${i}`;
-      let personTotal = parseFloat(
-        document.querySelector(`#person-total-${i}`).value
-      );
+      let personTotal = individualTotalMap[i];
       if (Number.isNaN(personTotal)) {
         results.innerHTML = '<u>Please enter valid individual totals.</u>';
         return;
@@ -122,9 +134,11 @@ function calculate() {
       overallTaxAmt += parseFloat(individualTaxAmount);
 
       results.innerHTML += `
-      <b>${personName}</b> will pay 
-      <u>$${individualTotal}</u>  
-      <span class="grayText">(tax: $${individualTaxAmount} + tip: $${individualTipAmount})</span><p/>`;
+        <b>${personName}</b> will pay 
+        <u>$${individualTotal}</u>  
+        <span class="grayText">(tax: $${individualTaxAmount} + tip: $${individualTipAmount})</span>
+        <p/>
+      `;
     }
 
     results.innerHTML += `
@@ -150,6 +164,40 @@ function getMultiplier(baseAmount, type, amount) {
 function validateNumber(value) {
   // only allows numbers and one decimal at most
   return value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+}
+
+// dealing with additional expenses
+function generateRandomString() {
+  return 'expense' + Math.random().toString(36).substring(2, 7);
+}
+
+function addAdditionalExpense(person) {
+  const randomString = generateRandomString();
+  document.querySelector(`#additionalExpensesSection-${person}`).innerHTML += `
+      <p/>
+      <div class="fieldInputRow" id="${randomString}">  
+        <input 
+          type="text" 
+          class="person-${person}-expense" 
+          id="${randomString}-input" 
+          placeholder="${individualTotalPlaceholder}" 
+          oninput="${onInputCall}"
+        />
+        <button 
+          class="removeExpenseButton" 
+          onclick="removeAdditionalExpense('#${randomString}', '#additionalExpensesSection-${person}')"
+        >
+          -
+        </button>
+      </div>
+    `;
+}
+
+function removeAdditionalExpense(randomString) {
+  const currNode = document.querySelector(randomString);
+  if (currNode) {
+    currNode.parentElement.removeChild(currNode);
+  }
 }
 
 // Tips
