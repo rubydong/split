@@ -25,7 +25,7 @@ function allocateIndividualInputs() {
     individualTotalsSection.innerHTML += `
       <div class="fieldInputRow" id="individualTotalRow-${i}">
         <input type="text" id="person-name-${i}" class="light-spacing" placeholder="Person ${i}"/>
-        <input type="text" class="person-${i}-expense" id="person-total-${i}" class="light-spacing" placeholder="${individualTotalPlaceholder}" oninput="${onInputCall}"/>
+        <input type="text" class="person-${i}-expense" class="light-spacing" placeholder="${individualTotalPlaceholder}" oninput="${onInputCall}"/>
         <button class="additionalExpenseButton" onclick="addAdditionalExpense(${i})">+</button>  
       </div>
       <div class="additionalExpensesSection" id="additionalExpensesSection-${i}"></div>
