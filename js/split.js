@@ -1,5 +1,5 @@
-const INDIVIDUAL_SUBTOTAL_PLACEHOLDER = "Individual Subtotal ($)";
-const ADDITIONAL_EXPENSE_PLACEHOLDER = "Additional Expense ($)";
+const INDIVIDUAL_SUBTOTAL_PLACEHOLDER = "Individual subtotal";
+const ADDITIONAL_EXPENSE_PLACEHOLDER = "Additional expense";
 const onInputChange = "this.value=validateNumber(this.value)";
 
 const allocateIndividualInputs = () => {
@@ -12,13 +12,21 @@ const allocateIndividualInputs = () => {
 
   for (let i = 1; i <= total; i++) {
     individualTotalsSection.innerHTML += `
-      <div class="fieldInputRow" id="individualTotalRow-${i}">
-        <input type="text" id="person-name-${i}" class="light-spacing" placeholder="Person ${i}"/>
-        <input type="text" class="person-${i}-expense" class="light-spacing" placeholder="${INDIVIDUAL_SUBTOTAL_PLACEHOLDER}" oninput="${onInputChange}"/>
-        <button class="additionalExpenseButton" onclick="addAdditionalExpense(${i})">+</button>  
+    <div class="row" id="individualTotalRow-${i}">
+      <div class="input-field col s4 offset-s2">
+        <input type="text" id="person-name-${i}" placeholder="Name"/>
+        <label for="person-name-${i}">Person ${i}</label>
       </div>
-      <div class="additionalExpensesSection" id="additionalExpensesSection-${i}"></div>
-      <p/>
+      <div class="input-field col s4">
+      <input type="text" class="person-${i}-expense" placeholder="${INDIVIDUAL_SUBTOTAL_PLACEHOLDER}" oninput="${onInputChange}"/>
+      </div>
+      <div class="input-field col">
+        <button class="additionalExpenseButton" onclick="addAdditionalExpense(${i})">+</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="additionalExpensesSection" id="additionalExpensesSection-${i}"/>
+    </div>
     `;
   }
 };
@@ -26,7 +34,7 @@ const allocateIndividualInputs = () => {
 allocateIndividualInputs();
 
 const calculate = () => {
-  let results = document.querySelector("#results");
+  const results = document.querySelector("#results");
   // clear existing calculations for results
   results.innerHTML = "<h3>Calculations</h3> <p/>";
 
@@ -39,6 +47,7 @@ const calculate = () => {
   }
   let overallSubtotal = 0;
   const individualTotalMap = {};
+
   for (let i = 1; i <= numOfPeople; i++) {
     let individualSum = 0;
     const individualExpenses = document.querySelectorAll(
@@ -95,23 +104,32 @@ const generateRandomString = () => {
 const addAdditionalExpense = (person) => {
   const randomString = generateRandomString();
   const div = document.createElement("div");
-  div.classList.add("fieldInputRow");
+  div.className = "row";
   div.id = randomString;
+
+  const inputDiv = document.createElement("div");
+  inputDiv.className = "input-field col s4 offset-s6";
 
   const input = document.createElement("input");
   input.type = "text";
-  input.classList.add(`person-${person}-expense`);
+  input.className = `person-${person}-expense`;
+
   input.id = `${randomString}-input`;
   input.placeholder = ADDITIONAL_EXPENSE_PLACEHOLDER;
   input.setAttribute("oninput", onInputChange);
 
+  const removeButtonDiv = document.createElement("div");
+  removeButtonDiv.className = "input-field col";
+
   const removeButton = document.createElement("button");
-  removeButton.classList.add("removeExpenseButton");
+  removeButton.className = "removeExpenseButton";
   removeButton.onclick = () => removeAdditionalExpense(`#${randomString}`);
   removeButton.textContent = "-";
 
-  div.appendChild(input);
-  div.appendChild(removeButton);
+  div.appendChild(inputDiv);
+  div.appendChild(removeButtonDiv);
+  inputDiv.appendChild(input);
+  removeButtonDiv.append(removeButton);
 
   let p = document.createElement("p");
 
