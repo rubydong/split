@@ -1,4 +1,4 @@
-const INDIVIDUAL_SUBTOTAL_PLACEHOLDER = "Individual subtotal";
+const INDIVIDUAL_SUBTOTAL_PLACEHOLDER = "Amount";
 const ADDITIONAL_EXPENSE_PLACEHOLDER = "Additional expense";
 const onInputChange = "this.value=validateNumber(this.value)";
 
