@@ -18,18 +18,6 @@
         value="2"
         onChange="allocateIndividualInputs()"
       />
-      <br />
-
-      <!-- Splitting evenly? -->
-      <span>Do you want to split evenly?</span>
-      <select
-        id="split-evenly"
-        onChange="allocateIndividualInputs()"
-        class="padding-top"
-      >
-        <option class="grayText" value="No" default>No</option>
-        <option class="grayText" value="Yes">Yes</option>
-      </select>
       <p />
 
       <div id="individual-totals-section"></div>
@@ -37,66 +25,14 @@
       <div id="base-amount-section"></div>
 
       <p />
+      Total
+      <input
+        id="total"
+        type="text"
+        oninput="this.value=validateNumber(this.value)"
+        placeholder="Overall total ($)"
+      />
 
-      <!-- Taxes -->
-      <h3>How much tax was charged?</h3>
-      <select id="tax-type" onChange="defaultTaxPercentage()" class="padding-top">
-        <option value="$" default>$</option>
-        <option value="%">%</option>
-      </select>
-      <input type="text" id="tax-amount" placeholder="Tax amount ($ / %)" oninput="this.value=validateNumber(this.value)" />
-
-      <p />
-
-      <!-- Tips -->
-      <h3>Tip preferences</h3>
-
-      <select onchange="toggleTipsPercentagesSection()" id="tip-type" class="padding-top">
-        <option value="%" default>
-          %
-        </option>
-        <option value="$"">
-          $
-        </option>
-      </select>
-      <input type="text" id="tip-amount" placeholder="Tip amount ($ / %)" oninput="this.value=validateNumber(this.value)"/>
-
-      <!-- This section should only be available for percentages -->
-      <div class="tipsBasedOnPercentages">
-        <p />
-        <button class="tipPreferencesButton" onClick="changeTipAmount(15)">
-          15%
-        </button>
-        <button class="tipPreferencesButton" onClick="changeTipAmount(18)">
-          18%
-        </button>
-        <button class="tipPreferencesButton" onClick="changeTipAmount(20)">
-          20%
-        </button>
-        <button class="tipPreferencesButton" onClick="changeTipAmount(22)">
-          22%
-        </button>
-        <button class="tipPreferencesButton" onClick="changeTipAmount(25)">
-          25%
-        </button>
-
-        <p />
-        <input
-          type="radio"
-          id="preTax"
-          name="tipTaxPreference"
-          value="preTax"
-          checked
-        />Tip on pre-tax amount
-
-        <input
-          type="radio"
-          id="postTax"
-          name="tipTaxPreference"
-          value="postTax"
-        />Tip on post-tax amount
-      </div>
-      <p />
       <div id="results"></div>
       <p />
       <button id="calculate-button" onClick="calculate()">Calculate</button>
