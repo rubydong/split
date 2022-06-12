@@ -15,7 +15,7 @@ const allocateIndividualInputs = () => {
     <div class="row" id="individualTotalRow-${i}">
       <div class="input-field col s4 offset-s2">
         <input type="text" id="person-name-${i}" placeholder="Name"/>
-        <label for="person-name-${i}">Person ${i}</label>
+        <label for="person-name-${i}" class="active">Person ${i}</label>
       </div>
       <div class="input-field col s4">
       <input type="text" class="person-${i}-expense" placeholder="${INDIVIDUAL_SUBTOTAL_PLACEHOLDER}" oninput="${onInputChange}"/>
