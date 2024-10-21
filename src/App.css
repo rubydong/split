@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+body,
+input,
+select {
+  font-family: Montserrat;
+  text-align: center;
+  color: #46576b;
+}
+
+h1 {
+  text-align: center;
+}
+
+h3 {
+  color: #738794;
+}
