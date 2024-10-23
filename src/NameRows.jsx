@@ -7,6 +7,7 @@ const NameRow = ({ i, names, setNames }) => {
 
   return (
     <StyledInput
+      style={{ marginTop: "12px" }}
       id={`${personKey}-name`}
       placeholder={`Person ${i} Name`}
       variant="outlined"

@@ -1,12 +1,6 @@
 import BackLink from "./BackLink";
+import { StyledTable } from "./Styles";
 import { EXPENSES_SCREEN } from "./constants";
-import Table from "@mui/joy/Table";
-import styled from "@emotion/styled";
-
-const StyledTable = styled(Table)`
-  margin-top: 24px;
-  width: 80%;
-`;
 
 const ResultsScreen = ({ results, setCurrentScreen }) => {
   const formattedResults = [];
@@ -15,7 +9,7 @@ const ResultsScreen = ({ results, setCurrentScreen }) => {
     formattedResults.push(
       <tr>
         <td style={{ textAlign: "left" }}>{result.name}</td>
-        <td style={{ textAlign: "left" }}>{result.cost}</td>
+        <td style={{ textAlign: "left" }}>${result.cost}</td>
       </tr>
     );
   }
@@ -33,7 +27,11 @@ const ResultsScreen = ({ results, setCurrentScreen }) => {
             <th style={{ width: "30%" }}>Cost</th>
           </tr>
         </thead>
-        {formattedResults}
+        <tbody>
+          {formattedResults.length === 0
+            ? "Something went wrong, please go back and try again."
+            : formattedResults}
+        </tbody>
       </StyledTable>
     </>
   );

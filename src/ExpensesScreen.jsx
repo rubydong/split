@@ -1,6 +1,6 @@
 import BackLink from "./BackLink";
-import ExpensesRow from "./ExpensesRow";
-import { StyledButton, StyledInput } from "./Styles";
+import ExpensesTable from "./ExpensesTable";
+import { StyledButton, StyledInput, StyledTable } from "./Styles";
 import { INTRO_SCREEN, RESULTS_SCREEN, SELECT_PLACEHOLDER } from "./constants";
 
 const ExpensesScreen = ({
@@ -68,11 +68,13 @@ const ExpensesScreen = ({
     <>
       <BackLink newScreen={INTRO_SCREEN} setCurrentScreen={setCurrentScreen} />
       <h3>Shared Expenses</h3>
-      <ExpensesRow
+
+      <ExpensesTable
         names={names}
         expenses={expenses}
         setExpenses={setExpenses}
       />
+      <p />
       <h3>Total</h3>
       <StyledInput
         placeholder="Amount"
@@ -80,7 +82,7 @@ const ExpensesScreen = ({
         type="number"
         onChange={(e) => setTotal(e.target.value)}
       />
-      <p />
+
       <StyledButton disabled={isDisabled} onClick={() => calculate()}>
         Calculate
       </StyledButton>

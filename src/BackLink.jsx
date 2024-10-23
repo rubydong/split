@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import { SMALL_BREAKPOINT } from "./Styles";
 
 const StyledBackLink = styled.div`
   margin-right: auto;
   margin-left: 10%;
-  color: #738794;
+  color: #65a3d9;
   display: flex;
   align-items: center;
 
@@ -13,6 +14,10 @@ const StyledBackLink = styled.div`
   }
   &:hover {
     cursor: pointer;
+  }
+
+  @media only screen and (max-width: ${SMALL_BREAKPOINT}px) {
+    margin-left: 0px;
   }
 `;
 

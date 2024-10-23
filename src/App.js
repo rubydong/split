@@ -5,6 +5,7 @@ import IntroScreen from "./IntroScreen";
 import { EXPENSES_SCREEN, INTRO_SCREEN, RESULTS_SCREEN } from "./constants";
 import ExpensesScreen from "./ExpensesScreen";
 import ResultsScreen from "./ResultsScreen";
+import { SMALL_BREAKPOINT } from "./Styles";
 
 const Container = styled.div`
   padding: 24px;
@@ -12,6 +13,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 1440px;
+
+  @media only screen and (max-width: ${SMALL_BREAKPOINT}px) {
+    padding: 8px;
+  }
 `;
 
 const App = () => {

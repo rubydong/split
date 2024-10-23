@@ -1,9 +1,10 @@
 import Input from "@mui/joy/Input";
 import styled from "@emotion/styled";
-import FormLabel from "@mui/joy/FormLabel";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-import { Button, Select } from "@mui/joy";
+import { Button, Select, Table } from "@mui/joy";
+
+export const SMALL_BREAKPOINT = "650";
 
 // Rows
 export const Row = styled.div`
@@ -15,33 +16,28 @@ export const Row = styled.div`
 `;
 
 // Inputs
-export const StyledFormLabel = styled(FormLabel)`
-  width: 400px;
-`;
-
 export const StyledInput = styled(Input)`
-  width: 400px;
-  margin: 12px;
+  width: 80%;
 `;
 
 export const StyledSelect = styled(Select)`
-  width: 400px;
-  margin: 0px 12px;
+  width: 80%;
 `;
 
 export const StyledButton = styled(Button)`
   margin-top: 24px;
-  width: 400px;
-  background-color: #46576b !important;
+  width: 80%;
+  background-color: #639dcf !important;
+
+  &:disabled {
+    background-color: #c3c3c3 !important;
+    color: white;
+  }
 `;
 
 // Icons
 export const StyledAddIcon = styled(AddCircleIcon)`
-  color: #a5c0cc;
-
-  &:hover {
-    cursor: pointer;
-  }
+  padding-right: 4px;
 `;
 
 export const StyledRemoveIcon = styled(RemoveCircleIcon)`
@@ -49,5 +45,25 @@ export const StyledRemoveIcon = styled(RemoveCircleIcon)`
 
   &:hover {
     cursor: pointer;
+  }
+`;
+
+// Table
+export const StyledTable = styled(Table)`
+  margin-top: 24px;
+  width: 80%;
+
+  tr {
+    text-align: left;
+  }
+
+  @media only screen and (max-width: ${SMALL_BREAKPOINT}px) {
+    width: 100%;
+  }
+
+  input,
+  select,
+  button {
+    width: 100%;
   }
 `;

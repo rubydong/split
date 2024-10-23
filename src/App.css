@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url("https://fonts.googleapis.com/css?family=Montserrat");
 
 body,
 input,
 select {
   font-family: Montserrat;
   text-align: center;
-  color: #46576b;
+  color: #639dcf;
 }
 
 h1 {
