@@ -1,0 +1,91 @@
+import BackLink from "./BackLink";
+import ExpensesRow from "./ExpensesRow";
+import { StyledButton, StyledInput } from "./Styles";
+import { INTRO_SCREEN, RESULTS_SCREEN, SELECT_PLACEHOLDER } from "./constants";
+
+const ExpensesScreen = ({
+  names,
+  expenses,
+  setExpenses,
+  total,
+  setTotal,
+  setResults,
+  setCurrentScreen,
+}) => {
+  const calculate = () => {
+    // key: person's name, value: amount
+    const expenseMap = {};
+    // To be used to keep track of porportions later. All amounts need to be added to this
+    let subTotal = 0;
+
+    // Calculate shared expenses
+    const sharedExpenses = document.getElementsByClassName("shared-people");
+
+    for (let i = 0; i < sharedExpenses.length; i++) {
+      const sharedNames = document
+        .getElementsByClassName("shared-people")
+        [i].getElementsByTagName("button")[0]
+        .innerHTML.split(",");
+
+      if (sharedNames?.[0] === SELECT_PLACEHOLDER) {
+        // It means user has not selected anyone for this
+        continue;
+      }
+
+      const sharedAmount =
+        parseFloat(
+          document
+            .getElementsByClassName("shared-amount")
+            [i].getElementsByTagName("input")[0].value
+        ) || 0;
+
+      subTotal += sharedAmount;
+
+      const splitAmount = parseFloat(sharedAmount) / sharedNames.length;
+
+      sharedNames.forEach((name) => {
+        expenseMap[name.trim()] = (expenseMap[name.trim()] || 0) + splitAmount;
+      });
+    }
+
+    const resultsArr = [];
+    Object.keys(expenseMap).forEach((name) => {
+      const individualFinalAmt = (
+        (expenseMap[name] / subTotal) *
+        total
+      ).toFixed(2);
+
+      resultsArr.push({ name, cost: individualFinalAmt });
+    });
+
+    setResults(resultsArr);
+
+    setCurrentScreen(RESULTS_SCREEN);
+  };
+
+  const isDisabled = false;
+  return (
+    <>
+      <BackLink newScreen={INTRO_SCREEN} setCurrentScreen={setCurrentScreen} />
+      <h3>Shared Expenses</h3>
+      <ExpensesRow
+        names={names}
+        expenses={expenses}
+        setExpenses={setExpenses}
+      />
+      <h3>Total</h3>
+      <StyledInput
+        placeholder="Amount"
+        variant="outlined"
+        type="number"
+        onChange={(e) => setTotal(e.target.value)}
+      />
+      <p />
+      <StyledButton disabled={isDisabled} onClick={() => calculate()}>
+        Calculate
+      </StyledButton>
+    </>
+  );
+};
+
+export default ExpensesScreen;

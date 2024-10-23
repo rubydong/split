@@ -1,11 +1,13 @@
-import React from 'react';
+import React from "react";
 import {
+  Row,
   StyledAddIcon,
   StyledInput,
   StyledRemoveIcon,
   StyledSelect,
-} from './Styles';
-import { generateRandomString, getUpdatedRows } from './utils';
+} from "./Styles";
+import { generateRandomString, getUpdatedRows } from "./utils";
+import { SELECT_PLACEHOLDER } from "./constants";
 
 const AddExpense = ({
   additionalRows,
@@ -13,8 +15,6 @@ const AddExpense = ({
   additionalRowsRef,
   className,
   optionsArr,
-  isDisabled,
-  RowComponent,
 }) => {
   const handleRemoveRow = (uniqueId) => {
     const updatedRows = getUpdatedRows(additionalRowsRef.current, uniqueId);
@@ -27,17 +27,15 @@ const AddExpense = ({
         const uniqueId = generateRandomString();
         const updatedRows = [
           ...additionalRows,
-          <RowComponent id={uniqueId}>
-            {optionsArr && (
-              <StyledSelect
-                className={`shared-people`}
-                placeholder="Select multiple people"
-                multiple={true}
-              >
-                {optionsArr}
-              </StyledSelect>
-            )}
-
+          <Row id={uniqueId}>
+            <StyledSelect
+              className={`shared-people`}
+              placeholder={SELECT_PLACEHOLDER}
+              multiple={true}
+            >
+              {optionsArr}
+            </StyledSelect>
+            <StyledInput placeholder="Item" variant="outlined" type="text" />
             <StyledInput
               className={className}
               placeholder="Amount"
@@ -45,7 +43,7 @@ const AddExpense = ({
               type="number"
             />
             <StyledRemoveIcon onClick={() => handleRemoveRow(uniqueId)} />
-          </RowComponent>,
+          </Row>,
         ];
 
         setAdditionalRows(updatedRows);
