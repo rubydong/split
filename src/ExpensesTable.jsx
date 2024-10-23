@@ -15,6 +15,12 @@ import { generateRandomString, getUpdatedRows } from "./utils";
 import useStateRef from "react-usestateref";
 import styled from "@emotion/styled";
 
+const ErrorMessage = styled.span`
+  color: #d1626c;
+  font-weight: 600;
+  margin-top: 12px;
+`;
+
 const AddExpenseButton = styled(StyledButton)`
   background-color: white !important;
   color: #639dcf;
@@ -24,6 +30,7 @@ const ExpenseRow = ({
   optionsArr,
   expenseRowsRef,
   setExpenseRows,
+  setShowErrorMsg,
   uniqueId,
 }) => {
   const [shouldRenderItems, setShouldRenderItems] = useState(
@@ -41,6 +48,7 @@ const ExpenseRow = ({
   const handleRemoveRow = (uniqueId) => {
     const updatedRows = getUpdatedRows(expenseRowsRef.current, uniqueId);
     setExpenseRows(updatedRows);
+    setShowErrorMsg(false);
   };
 
   return (
@@ -51,13 +59,19 @@ const ExpenseRow = ({
           placeholder={SELECT_PLACEHOLDER}
           multiple={true}
           variant="outlined"
+          onChange={() => setShowErrorMsg(false)}
         >
           {optionsArr}
         </StyledSelect>
       </td>
       {shouldRenderItems && (
         <td>
-          <StyledInput placeholder="Item" variant="outlined" type="text" />
+          <StyledInput
+            placeholder="Item"
+            variant="outlined"
+            type="text"
+            onChange={() => setShowErrorMsg(false)}
+          />
         </td>
       )}
       <td>
@@ -66,6 +80,7 @@ const ExpenseRow = ({
           placeholder="Amount"
           variant="outlined"
           type="number"
+          onChange={() => setShowErrorMsg(false)}
         />
       </td>
       <td>
@@ -75,7 +90,7 @@ const ExpenseRow = ({
   );
 };
 
-const ExpensesTable = ({ names, expenses, setExpenses }) => {
+const ExpensesTable = ({ names, showErrorMsg, setShowErrorMsg }) => {
   const [shouldRenderItems, setShouldRenderItems] = useState(
     window.innerWidth > SMALL_BREAKPOINT
   );
@@ -95,18 +110,24 @@ const ExpensesTable = ({ names, expenses, setExpenses }) => {
   }, []);
 
   useEffect(() => {
+    const firstRowId = generateRandomString();
+    const secondRowId = generateRandomString();
     setExpenseRows([
       <ExpenseRow
         optionsArr={optionsArr}
         setExpenseRows={setExpenseRows}
         expenseRowsRef={expenseRowsRef}
-        uniqueId={generateRandomString()}
+        key={firstRowId}
+        uniqueId={firstRowId}
+        setShowErrorMsg={setShowErrorMsg}
       />,
       <ExpenseRow
         optionsArr={optionsArr}
         setExpenseRows={setExpenseRows}
         expenseRowsRef={expenseRowsRef}
-        uniqueId={generateRandomString()}
+        key={secondRowId}
+        uniqueId={secondRowId}
+        setShowErrorMsg={setShowErrorMsg}
       />,
     ]);
   }, []);
@@ -125,19 +146,24 @@ const ExpensesTable = ({ names, expenses, setExpenses }) => {
           </tr>
         </thead>
         <tbody>{expenseRows}</tbody>
-      </StyledTable>
+      </StyledTable>{" "}
+      {showErrorMsg && (
+        <ErrorMessage>Please fill in all required fields</ErrorMessage>
+      )}
       <AddExpenseButton
-        onClick={() =>
+        onClick={() => {
+          const additionalRowId = generateRandomString();
           setExpenseRows([
             ...expenseRows,
             <ExpenseRow
               optionsArr={optionsArr}
               setExpenseRows={setExpenseRows}
               expenseRowsRef={expenseRowsRef}
-              uniqueId={generateRandomString()}
+              uniqueId={additionalRowId}
+              setShowErrorMsg={setShowErrorMsg}
             />,
-          ])
-        }
+          ]);
+        }}
       >
         <StyledAddIcon /> Add Expense
       </AddExpenseButton>

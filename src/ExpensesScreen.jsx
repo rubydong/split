@@ -1,17 +1,19 @@
+import { useState } from "react";
 import BackLink from "./BackLink";
 import ExpensesTable from "./ExpensesTable";
-import { StyledButton, StyledInput, StyledTable } from "./Styles";
+import { StyledButton, StyledInput } from "./Styles";
 import { INTRO_SCREEN, RESULTS_SCREEN, SELECT_PLACEHOLDER } from "./constants";
 
 const ExpensesScreen = ({
   names,
-  expenses,
-  setExpenses,
+
   total,
   setTotal,
   setResults,
   setCurrentScreen,
 }) => {
+  const [showErrorMsg, setShowErrorMsg] = useState(false);
+
   const calculate = () => {
     // key: person's name, value: amount
     const expenseMap = {};
@@ -49,12 +51,20 @@ const ExpensesScreen = ({
     }
 
     const resultsArr = [];
+
+    if (Object.keys(expenseMap).length === 0) {
+      setShowErrorMsg(true);
+      return;
+    }
     Object.keys(expenseMap).forEach((name) => {
       const individualFinalAmt = (
         (expenseMap[name] / subTotal) *
         total
       ).toFixed(2);
-
+      if (isNaN(individualFinalAmt) || individualFinalAmt === "NaN" || !name) {
+        setShowErrorMsg(true);
+        return;
+      }
       resultsArr.push({ name, cost: individualFinalAmt });
     });
 
@@ -68,21 +78,23 @@ const ExpensesScreen = ({
     <>
       <BackLink newScreen={INTRO_SCREEN} setCurrentScreen={setCurrentScreen} />
       <h3>Shared Expenses</h3>
-
       <ExpensesTable
         names={names}
-        expenses={expenses}
-        setExpenses={setExpenses}
+        showErrorMsg={showErrorMsg}
+        setShowErrorMsg={setShowErrorMsg}
       />
+
       <p />
       <h3>Total</h3>
       <StyledInput
         placeholder="Amount"
         variant="outlined"
         type="number"
-        onChange={(e) => setTotal(e.target.value)}
+        onChange={(e) => {
+          setShowErrorMsg(false);
+          setTotal(e.target.value);
+        }}
       />
-
       <StyledButton disabled={isDisabled} onClick={() => calculate()}>
         Calculate
       </StyledButton>

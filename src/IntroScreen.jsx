@@ -15,6 +15,24 @@ const IntroScreen = ({
     setIsNextDisabled(Object.keys(names).length !== numOfPeople);
   }, [names, numOfPeople]);
 
+  const onNumOfPeopleChange = (newValue) => {
+    setNumOfPeople(newValue);
+
+    // Do the following to deal with the scenario where user decreases the numOfPeople, names need to be cleaned
+    const currNames = {};
+    const individualNameDivs =
+      document.getElementsByClassName("individual-name");
+
+    for (let div of individualNameDivs) {
+      const input = div.getElementsByTagName("input")[0];
+      if (input.value) {
+        currNames[input.id] = input.value;
+      }
+    }
+
+    setNames(currNames);
+  };
+
   return (
     <>
       <h3>How Many People?</h3>
@@ -23,7 +41,9 @@ const IntroScreen = ({
         type="number"
         value={numOfPeople}
         variant="outlined"
-        onChange={(e) => setNumOfPeople(parseInt(e.target.value))}
+        onChange={(e) => {
+          onNumOfPeopleChange(parseInt(e.target.value));
+        }}
       />
 
       <h3>Names</h3>

@@ -7,7 +7,9 @@ const NameRow = ({ i, names, setNames }) => {
 
   return (
     <StyledInput
+      key={personKey}
       style={{ marginTop: "12px" }}
+      className="individual-name"
       id={`${personKey}-name`}
       placeholder={`Person ${i} Name`}
       variant="outlined"
@@ -26,7 +28,7 @@ const NameRow = ({ i, names, setNames }) => {
 const NameRows = ({ numOfPeople, names, setNames }) => {
   const nameRows = [];
   for (let i = 1; i <= numOfPeople; i++) {
-    nameRows.push(<NameRow i={i} names={names} setNames={setNames} />);
+    nameRows.push(<NameRow i={i} key={i} names={names} setNames={setNames} />);
   }
 
   return <>{nameRows}</>;

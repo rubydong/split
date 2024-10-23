@@ -26,6 +26,8 @@ const App = () => {
 
   // { person-i: name }
   const [names, setNames] = React.useState({});
+
+  // {expense-[uniqueId]: people: [], item: "", cost: ""}
   const [expenses, setExpenses] = React.useState({});
   const [total, setTotal] = React.useState(0);
   const [results, setResults] = React.useState([]);
