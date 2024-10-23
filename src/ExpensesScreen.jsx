@@ -94,6 +94,7 @@ const ExpensesScreen = ({
           setShowErrorMsg(false);
           setTotal(e.target.value);
         }}
+        slotProps={{ input: { min: "2" } }}
       />
       <StyledButton disabled={isDisabled} onClick={() => calculate()}>
         Calculate

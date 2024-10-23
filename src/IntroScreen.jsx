@@ -38,6 +38,7 @@ const IntroScreen = ({
       <h3>How Many People?</h3>
       <StyledInput
         placeholder="# of People"
+        slotProps={{ input: { min: "2" } }}
         type="number"
         value={numOfPeople}
         variant="outlined"

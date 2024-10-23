@@ -1,6 +1,4 @@
-import BackLink from "./BackLink";
 import { StyledButton, StyledTable } from "./Styles";
-import { EXPENSES_SCREEN } from "./constants";
 
 const ResultsScreen = ({ results, setCurrentScreen }) => {
   const formattedResults = [];

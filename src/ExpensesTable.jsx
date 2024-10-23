@@ -71,6 +71,7 @@ const ExpenseRow = ({
             variant="outlined"
             type="text"
             onChange={() => setShowErrorMsg(false)}
+            slotProps={{ input: { min: "0" } }}
           />
         </td>
       )}
@@ -80,6 +81,7 @@ const ExpenseRow = ({
           placeholder="Amount"
           variant="outlined"
           type="number"
+          slotProps={{ input: { min: "0" } }}
           onChange={() => setShowErrorMsg(false)}
         />
       </td>
