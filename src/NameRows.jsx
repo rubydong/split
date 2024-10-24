@@ -3,14 +3,15 @@ import { StyledInput } from "./Styles";
 
 const NameRow = ({ i, names, setNames }) => {
   const personKey = `person-${i}`;
-  const [currName, setCurrName] = useState(names[personKey] || "");
+  const personNameKey = personKey + "-name";
+  const [currName, setCurrName] = useState(names[personNameKey] || "");
 
   return (
     <StyledInput
       key={personKey}
       style={{ marginTop: "12px" }}
       className="individual-name"
-      id={`${personKey}-name`}
+      id={personNameKey}
       placeholder={`Person ${i} Name`}
       variant="outlined"
       value={currName}
@@ -18,7 +19,7 @@ const NameRow = ({ i, names, setNames }) => {
         setCurrName(e.target.value);
         setNames({
           ...names,
-          [personKey]: e.target.value || `Person ${i}`,
+          [personNameKey]: e.target.value || `Person ${i}`,
         });
       }}
     />

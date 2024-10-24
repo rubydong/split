@@ -22,6 +22,7 @@ const ResultsScreen = ({ results, setCurrentScreen }) => {
         setCurrentScreen={setCurrentScreen}
         newScreen={EXPENSES_SCREEN}
       />
+      <h3>Results</h3>
       {formattedResults.length === 0 ? (
         <>
           Something went wrong, please start over. <p />

@@ -30,6 +30,8 @@ const IntroScreen = ({
       }
     }
 
+    console.log("setting currNames", currNames);
+
     setNames(currNames);
   };
 
