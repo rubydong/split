@@ -10,9 +10,8 @@ import {
 } from "./Styles";
 import useState from "react-usestateref";
 import { SELECT_PLACEHOLDER } from "./constants";
-import { useEffect } from "react";
-import { generateRandomString, getUpdatedRows } from "./utils";
-import useStateRef from "react-usestateref";
+import React, { useEffect } from "react";
+import { generateRandomString, getIndexOfExpense } from "./utils";
 import styled from "@emotion/styled";
 
 const ErrorMessage = styled.span`
@@ -24,18 +23,24 @@ const ErrorMessage = styled.span`
 const AddExpenseButton = styled(StyledButton)`
   background-color: white !important;
   color: #639dcf;
+  width: auto;
 `;
 
 const ExpenseRow = ({
-  optionsArr,
-  expenseRowsRef,
-  setExpenseRows,
+  names,
+  expenses,
+  setExpenses,
   setShowErrorMsg,
   uniqueId,
 }) => {
   const [shouldRenderItems, setShouldRenderItems] = useState(
     window.innerWidth > SMALL_BREAKPOINT
   );
+  const optionsArr = Object.entries(names).map((name) => (
+    <Option value={name[0]} onClick={() => handleChange(name[0], "people")}>
+      {name[1]}
+    </Option>
+  ));
 
   useEffect(() => {
     const handleWindowResize = () =>
@@ -45,11 +50,47 @@ const ExpenseRow = ({
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
-  const handleRemoveRow = (uniqueId) => {
-    const updatedRows = getUpdatedRows(expenseRowsRef.current, uniqueId);
-    setExpenseRows(updatedRows);
+  const handleChange = (value, fieldName) => {
+    setShowErrorMsg(false);
+
+    const indexOfExpense = getIndexOfExpense(expenses, uniqueId);
+    if (indexOfExpense === -1) {
+      return;
+    }
+
+    let updatedValue = value;
+
+    if (fieldName === "people") {
+      const currArr = expenses[indexOfExpense].people || [];
+      if (currArr.includes(value)) {
+        currArr.splice(currArr.indexOf(value), 1);
+      } else {
+        currArr.push(value);
+      }
+      updatedValue = currArr;
+    }
+
+    const expenseObj = {
+      ...expenses[indexOfExpense],
+      [fieldName]: updatedValue,
+    };
+
+    const updatedExpenses = [...expenses];
+    updatedExpenses[indexOfExpense] = expenseObj;
+    setExpenses(updatedExpenses);
+  };
+
+  const handleRemoveRow = () => {
+    const indexOfExpense = getIndexOfExpense(expenses, uniqueId);
+
+    const updatedExpenses = [...expenses];
+    updatedExpenses.splice(indexOfExpense, 1);
+
+    setExpenses(updatedExpenses);
     setShowErrorMsg(false);
   };
+
+  const indexOfExpense = getIndexOfExpense(expenses, uniqueId);
 
   return (
     <tr id={uniqueId} key={uniqueId}>
@@ -59,7 +100,7 @@ const ExpenseRow = ({
           placeholder={SELECT_PLACEHOLDER}
           multiple={true}
           variant="outlined"
-          onChange={() => setShowErrorMsg(false)}
+          defaultValue={expenses[indexOfExpense]?.people || []}
         >
           {optionsArr}
         </StyledSelect>
@@ -70,8 +111,11 @@ const ExpenseRow = ({
             placeholder="Item"
             variant="outlined"
             type="text"
-            onChange={() => setShowErrorMsg(false)}
+            onChange={(e) => {
+              handleChange(e.target.value, "item");
+            }}
             slotProps={{ input: { min: "0" } }}
+            value={expenses[indexOfExpense]?.item || ""}
           />
         </td>
       )}
@@ -82,27 +126,30 @@ const ExpenseRow = ({
           variant="outlined"
           type="number"
           slotProps={{ input: { min: "0" } }}
-          onChange={() => setShowErrorMsg(false)}
+          onChange={(e) => {
+            handleChange(e.target.value, "cost");
+          }}
+          value={expenses[indexOfExpense]?.cost || ""}
         />
       </td>
       <td>
-        <StyledRemoveIcon onClick={() => handleRemoveRow(uniqueId)} />
+        <StyledRemoveIcon onClick={handleRemoveRow} />
       </td>
     </tr>
   );
 };
 
-const ExpensesTable = ({ names, showErrorMsg, setShowErrorMsg }) => {
+const ExpensesTable = ({
+  names,
+  showErrorMsg,
+  setShowErrorMsg,
+  expenses,
+  expensesRef,
+  setExpenses,
+}) => {
   const [shouldRenderItems, setShouldRenderItems] = useState(
     window.innerWidth > SMALL_BREAKPOINT
   );
-
-  const optionsArr = Object.entries(names).map((name) => (
-    <Option value={name[0]}>{name[1]}</Option>
-  ));
-
-  const [expenseRows, setExpenseRows, expenseRowsRef] = useStateRef([]);
-
   useEffect(() => {
     const handleWindowResize = () =>
       setShouldRenderItems(window.innerWidth > 650);
@@ -111,34 +158,28 @@ const ExpensesTable = ({ names, showErrorMsg, setShowErrorMsg }) => {
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
-  useEffect(() => {
-    const firstRowId = generateRandomString();
-    const secondRowId = generateRandomString();
-    setExpenseRows([
-      <ExpenseRow
-        optionsArr={optionsArr}
-        setExpenseRows={setExpenseRows}
-        expenseRowsRef={expenseRowsRef}
-        key={firstRowId}
-        uniqueId={firstRowId}
-        setShowErrorMsg={setShowErrorMsg}
-      />,
-      <ExpenseRow
-        optionsArr={optionsArr}
-        setExpenseRows={setExpenseRows}
-        expenseRowsRef={expenseRowsRef}
-        key={secondRowId}
-        uniqueId={secondRowId}
-        setShowErrorMsg={setShowErrorMsg}
-      />,
-    ]);
-  }, []);
+  const formatExpenses = () => {
+    return (expenses || []).map((expense) => {
+      return (
+        <ExpenseRow
+          names={names}
+          expenses={expenses}
+          expensesRef={expensesRef}
+          setExpenses={setExpenses}
+          key={expense.uniqueId}
+          setShowErrorMsg={setShowErrorMsg}
+          uniqueId={expense.uniqueId}
+        />
+      );
+    });
+  };
 
+  const FormattedExpenses = formatExpenses();
   return (
     <>
       <StyledTable size="md" stripe="2n">
         <thead>
-          <tr>
+          <tr key="expense-header-row">
             <th style={{ width: shouldRenderItems ? "40%" : "50%" }}>People</th>
             {shouldRenderItems && (
               <th style={{ width: "30%" }}>Item (Optional)</th>
@@ -147,23 +188,16 @@ const ExpensesTable = ({ names, showErrorMsg, setShowErrorMsg }) => {
             <th style={{ width: shouldRenderItems ? "10%" : "20%" }}>Action</th>
           </tr>
         </thead>
-        <tbody>{expenseRows}</tbody>
+        <tbody>{FormattedExpenses}</tbody>
       </StyledTable>{" "}
       {showErrorMsg && (
         <ErrorMessage>Please fill in all required fields</ErrorMessage>
       )}
       <AddExpenseButton
         onClick={() => {
-          const additionalRowId = generateRandomString();
-          setExpenseRows([
-            ...expenseRows,
-            <ExpenseRow
-              optionsArr={optionsArr}
-              setExpenseRows={setExpenseRows}
-              expenseRowsRef={expenseRowsRef}
-              uniqueId={additionalRowId}
-              setShowErrorMsg={setShowErrorMsg}
-            />,
+          setExpenses([
+            ...expensesRef.current,
+            { uniqueId: generateRandomString() },
           ]);
         }}
       >

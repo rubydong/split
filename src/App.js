@@ -6,6 +6,8 @@ import { EXPENSES_SCREEN, INTRO_SCREEN, RESULTS_SCREEN } from "./constants";
 import ExpensesScreen from "./ExpensesScreen";
 import ResultsScreen from "./ResultsScreen";
 import { SMALL_BREAKPOINT } from "./Styles";
+import { generateRandomString } from "./utils";
+import useStateRef from "react-usestateref";
 
 const Container = styled.div`
   padding: 24px;
@@ -27,8 +29,11 @@ const App = () => {
   // { person-i: name }
   const [names, setNames] = React.useState({});
 
-  // {expense-[uniqueId]: people: [], item: "", cost: ""}
-  const [expenses, setExpenses] = React.useState({});
+  // {expense-[uniqueId]: people: [], item: "", cost: "", uniqueId: ""}
+  const [expenses, setExpenses, expensesRef] = useStateRef([
+    { uniqueId: generateRandomString() },
+    { uniqueId: generateRandomString() },
+  ]);
   const [total, setTotal] = React.useState(0);
   const [results, setResults] = React.useState([]);
   const [currentScreen, setCurrentScreen] = React.useState(INTRO_SCREEN);
@@ -55,6 +60,7 @@ const App = () => {
           setCurrentScreen={setCurrentScreen}
           expenses={expenses}
           setExpenses={setExpenses}
+          expensesRef={expensesRef}
         />
       )}
 
