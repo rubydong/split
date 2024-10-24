@@ -1,4 +1,4 @@
-import { Box, Chip, Option } from "@mui/joy";
+import { Option } from "@mui/joy";
 import {
   SMALL_BREAKPOINT,
   StyledAddIcon,
@@ -11,11 +11,7 @@ import {
 import useState from "react-usestateref";
 import { SELECT_PLACEHOLDER } from "./constants";
 import React, { useEffect } from "react";
-import {
-  generateRandomString,
-  getIndexOfExpense,
-  getUpdatedRows,
-} from "./utils";
+import { generateRandomString, getIndexOfExpense } from "./utils";
 import styled from "@emotion/styled";
 
 const ErrorMessage = styled.span`
@@ -41,7 +37,9 @@ const ExpenseRow = ({
     window.innerWidth > SMALL_BREAKPOINT
   );
   const optionsArr = Object.entries(names).map((name) => (
-    <Option value={name[0]}>{name[1]}</Option>
+    <Option value={name[0]} onClick={() => handleChange(name[0], "people")}>
+      {name[1]}
+    </Option>
   ));
 
   useEffect(() => {
@@ -52,14 +50,29 @@ const ExpenseRow = ({
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
-  const handleChange = (e, fieldName) => {
-    console.log("e.target.value", e.target.value);
+  const handleChange = (value, fieldName) => {
     setShowErrorMsg(false);
+
     const indexOfExpense = getIndexOfExpense(expenses, uniqueId);
+    if (indexOfExpense === -1) {
+      return;
+    }
+
+    let updatedValue = value;
+
+    if (fieldName === "people") {
+      const currArr = expenses[indexOfExpense].people || [];
+      if (currArr.includes(value)) {
+        currArr.splice(currArr.indexOf(value), 1);
+      } else {
+        currArr.push(value);
+      }
+      updatedValue = currArr;
+    }
 
     const expenseObj = {
       ...expenses[indexOfExpense],
-      [fieldName]: e.target.value,
+      [fieldName]: updatedValue,
     };
 
     const updatedExpenses = [...expenses];
@@ -87,12 +100,9 @@ const ExpenseRow = ({
           placeholder={SELECT_PLACEHOLDER}
           multiple={true}
           variant="outlined"
-          onChange={(e) => {
-            handleChange(e, "people");
-          }}
-          optionsArr={[{ apple: "pear" }]}
+          defaultValue={expenses[indexOfExpense]?.people || []}
         >
-          {/* {optionsArr} */}
+          {optionsArr}
         </StyledSelect>
       </td>
       {shouldRenderItems && (
@@ -102,7 +112,7 @@ const ExpenseRow = ({
             variant="outlined"
             type="text"
             onChange={(e) => {
-              handleChange(e, "item");
+              handleChange(e.target.value, "item");
             }}
             slotProps={{ input: { min: "0" } }}
             value={expenses[indexOfExpense]?.item || ""}
@@ -117,7 +127,7 @@ const ExpenseRow = ({
           type="number"
           slotProps={{ input: { min: "0" } }}
           onChange={(e) => {
-            handleChange(e, "cost");
+            handleChange(e.target.value, "cost");
           }}
           value={expenses[indexOfExpense]?.cost || ""}
         />
@@ -169,7 +179,7 @@ const ExpensesTable = ({
     <>
       <StyledTable size="md" stripe="2n">
         <thead>
-          <tr>
+          <tr key="expense-header-row">
             <th style={{ width: shouldRenderItems ? "40%" : "50%" }}>People</th>
             {shouldRenderItems && (
               <th style={{ width: "30%" }}>Item (Optional)</th>

@@ -7,7 +7,7 @@ const ResultsScreen = ({ results, setCurrentScreen }) => {
 
   for (let result of results) {
     formattedResults.push(
-      <tr>
+      <tr key={result.name}>
         <td style={{ textAlign: "left" }}>{result.name}</td>
         <td style={{ textAlign: "left" }}>
           {isNaN(result.cost) ? "Error Computing" : "$" + result.cost}
@@ -29,7 +29,7 @@ const ResultsScreen = ({ results, setCurrentScreen }) => {
       ) : (
         <StyledTable size="md" stripe="2n">
           <thead>
-            <tr>
+            <tr key={"header-row"}>
               <th style={{ width: "70%" }}>Person</th>
               <th style={{ width: "30%" }}>Cost</th>
             </tr>
