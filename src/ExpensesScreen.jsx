@@ -6,13 +6,16 @@ import { INTRO_SCREEN, RESULTS_SCREEN, SELECT_PLACEHOLDER } from "./constants";
 
 const ExpensesScreen = ({
   names,
-
   total,
   setTotal,
   setResults,
   setCurrentScreen,
+  expenses,
+  expensesRef,
+  setExpenses,
 }) => {
   const [showErrorMsg, setShowErrorMsg] = useState(false);
+  const isDisabled = !total || total === 0;
 
   const calculate = () => {
     // key: person's name, value: amount
@@ -31,7 +34,8 @@ const ExpensesScreen = ({
 
       if (sharedNames?.[0] === SELECT_PLACEHOLDER) {
         // It means user has not selected anyone for this
-        continue;
+        setShowErrorMsg(true);
+        return;
       }
 
       const sharedAmount =
@@ -73,7 +77,6 @@ const ExpensesScreen = ({
     setCurrentScreen(RESULTS_SCREEN);
   };
 
-  const isDisabled = false;
   return (
     <>
       <BackLink newScreen={INTRO_SCREEN} setCurrentScreen={setCurrentScreen} />
@@ -82,6 +85,9 @@ const ExpensesScreen = ({
         names={names}
         showErrorMsg={showErrorMsg}
         setShowErrorMsg={setShowErrorMsg}
+        expenses={expenses}
+        expensesRef={expensesRef}
+        setExpenses={setExpenses}
       />
 
       <p />
@@ -90,6 +96,7 @@ const ExpensesScreen = ({
         placeholder="Amount"
         variant="outlined"
         type="number"
+        value={total}
         onChange={(e) => {
           setShowErrorMsg(false);
           setTotal(e.target.value);

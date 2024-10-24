@@ -1,4 +1,6 @@
+import BackLink from "./BackLink";
 import { StyledButton, StyledTable } from "./Styles";
+import { EXPENSES_SCREEN } from "./constants";
 
 const ResultsScreen = ({ results, setCurrentScreen }) => {
   const formattedResults = [];
@@ -16,6 +18,10 @@ const ResultsScreen = ({ results, setCurrentScreen }) => {
 
   return (
     <>
+      <BackLink
+        setCurrentScreen={setCurrentScreen}
+        newScreen={EXPENSES_SCREEN}
+      />
       {formattedResults.length === 0 ? (
         <>
           Something went wrong, please start over. <p />
